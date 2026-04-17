@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WanderLog — Travel Stories & Tips</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5F0E8;
+    --deep: #1A2332;
+    --teal: #2A7B6F;
+    --teal-light: #E0F0ED;
+    --amber: #C8883A;
+    --amber-light: #FDF3E3;
+    --text: #2C3240;
+    --muted: #7A8190;
+    --border: #E2DDD4;
+    --white: #FFFFFF;
+    --red: #C0392B;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--sand); color:var(--text); min-height:100vh; }
+
+  /* ── NAV ── */
+  nav { background:var(--deep); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:100; }
+  .nav-logo { font-family:'Playfair Display',serif; color:var(--white); font-size:1.4rem; letter-spacing:.5px; cursor:pointer; }
+  .nav-logo span { color:var(--amber); }
+  .nav-links { display:flex; gap:1rem; align-items:center; }
+  .nav-links a { color:#ccc; text-decoration:none; font-size:.85rem; cursor:pointer; transition:color .2s; }
+  .nav-links a:hover { color:var(--white); }
+  .btn { padding:.45rem 1rem; border-radius:6px; font-size:.82rem; font-family:inherit; cursor:pointer; border:none; transition:all .2s; font-weight:500; }
+  .btn-primary { background:var(--teal); color:var(--white); }
+  .btn-primary:hover { background:#235f55; }
+  .btn-amber { background:var(--amber); color:var(--white); }
+  .btn-amber:hover { background:#a86e2a; }
+  .btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--text); }
+  .btn-outline:hover { border-color:var(--teal); color:var(--teal); }
+  .btn-danger { background:var(--red); color:var(--white); }
+  .btn-sm { padding:.3rem .7rem; font-size:.78rem; }
+
+  /* ── VIEWS ── */
+  .view { display:none; }
+  .view.active { display:block; }
+
+  /* ── HERO ── */
+  .hero { background:linear-gradient(135deg, var(--deep) 0%, #2A3F5F 100%); color:var(--white); padding:4rem 2rem; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:2.8rem; margin-bottom:.75rem; position:relative; }
+  .hero p { font-size:1rem; color:#aab; max-width:500px; margin:0 auto 1.5rem; position:relative; }
+  .hero-btns { display:flex; gap:.75rem; justify-content:center; position:relative; }
+
+  /* ── ADS ── */
+  .ad-banner { background:var(--amber-light); border:1.5px dashed var(--amber); border-radius:10px; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+  .ad-label { font-size:.7rem; color:var(--amber); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:.2rem; }
+  .ad-text { font-size:.9rem; font-weight:500; }
+  .ad-sub { font-size:.78rem; color:var(--muted); }
+
+  /* ── GRID ── */
+  .section { padding:2rem; max-width:1100px; margin:0 auto; }
+  .section-title { font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:.25rem; }
+  .section-sub { font-size:.85rem; color:var(--muted); margin-bottom:1.5rem; }
+  .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; }
+
+  /* ── CARD ── */
+  .card { background:var(--white); border-radius:12px; overflow:hidden; border:1px solid var(--border); transition:transform .2s, box-shadow .2s; }
+  .card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.09); }
+  .card-img { height:180px; background:var(--deep); display:flex; align-items:center; justify-content:center; font-size:3rem; }
+  .card-body { padding:1.25rem; }
+  .card-tag { display:inline-block; background:var(--teal-light); color:var(--teal); font-size:.72rem; font-weight:600; padding:.2rem .6rem; border-radius:20px; letter-spacing:.5px; text-transform:uppercase; margin-bottom:.6rem; }
+  .card-title { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:.5rem; line-height:1.4; }
+  .card-excerpt { font-size:.83rem; color:var(--muted); line-height:1.6; margin-bottom:1rem; }
+  .card-meta { display:flex; justify-content:space-between; align-items:center; font-size:.75rem; color:var(--muted); }
+  .card-author { display:flex; align-items:center; gap:.4rem; }
+  .avatar { width:22px; height:22px; border-radius:50%; background:var(--teal); color:var(--white); display:inline-flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:600; }
+  .card-read-btn { background:none; border:none; color:var(--teal); font-size:.8rem; font-weight:500; cursor:pointer; font-family:inherit; }
+  .card-read-btn:hover { text-decoration:underline; }
+
+  /* ── SIDEBAR LAYOUT ── */
+  .content-layout { display:grid; grid-template-columns:1fr 300px; gap:2rem; max-width:1100px; margin:0 auto; padding:2rem; }
+  @media(max-width:768px){ .content-layout { grid-template-columns:1fr; } }
+  .sidebar { display:flex; flex-direction:column; gap:1.5rem; }
+  .sidebar-card { background:var(--white); border-radius:12px; border:1px solid var(--border); padding:1.25rem; }
+  .sidebar-card h3 { font-family:'Playfair Display',serif; font-size:1rem; margin-bottom:1rem; }
+
+  /* ── MODAL ── */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; align-items:center; justify-content:center; padding:1rem; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--white); border-radius:14px; padding:2rem; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; }
+  .modal h2 { font-family:'Playfair Display',serif; margin-bottom:.25rem; }
+  .modal p.sub { font-size:.83rem; color:var(--muted); margin-bottom:1.5rem; }
+  .form-group { margin-bottom:1.1rem; }
+  label { display:block; font-size:.82rem; font-weight:500; margin-bottom:.35rem; }
+  input[type=text],input[type=email],input[type=password],select,textarea {
+    width:100%; padding:.6rem .8rem; border:1.5px solid var(--border); border-radius:8px;
+    font-family:inherit; font-size:.88rem; color:var(--text); background:var(--white);
+    transition:border-color .2s; outline:none;
+  }
+  input:focus, select:focus, textarea:focus { border-color:var(--teal); }
+  textarea { resize:vertical; min-height:100px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .modal-actions { display:flex; justify-content:flex-end; gap:.75rem; margin-top:1.5rem; }
+  .msg { font-size:.82rem; padding:.6rem .9rem; border-radius:8px; margin-bottom:1rem; }
+  .msg.success { background:#e6f4ef; color:#1a6b4a; }
+  .msg.error { background:#fdecea; color:var(--red); }
+
+  /* ── ADMIN PANEL ── */
+  .admin-layout { display:grid; grid-template-columns:220px 1fr; min-height:calc(100vh - 60px); }
+  .admin-sidebar { background:var(--deep); color:var(--white); padding:1.5rem 1rem; }
+  .admin-sidebar h3 { font-size:.75rem; text-transform:uppercase; letter-spacing:1.5px; color:#667; margin:1.25rem 0 .5rem; }
+  .admin-sidebar h3:first-child { margin-top:0; }
+  .admin-nav-item { display:block; padding:.55rem .75rem; border-radius:8px; color:#bbc; font-size:.85rem; cursor:pointer; transition:all .2s; margin-bottom:.1rem; }
+  .admin-nav-item:hover, .admin-nav-item.active { background:rgba(255,255,255,.1); color:var(--white); }
+  .admin-main { padding:2rem; overflow-y:auto; }
+  .admin-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; }
+  .admin-header h1 { font-family:'Playfair Display',serif; font-size:1.6rem; }
+  .admin-header p { font-size:.83rem; color:var(--muted); margin-top:.25rem; }
+  .stat-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; margin-bottom:2rem; }
+  .stat-card { background:var(--white); border-radius:10px; border:1px solid var(--border); padding:1rem 1.25rem; }
+  .stat-card .num { font-size:1.8rem; font-weight:700; color:var(--deep); }
+  .stat-card .lbl { font-size:.78rem; color:var(--muted); margin-top:.2rem; }
+  .table-wrap { background:var(--white); border-radius:12px; border:1px solid var(--border); overflow:hidden; }
+  table { width:100%; border-collapse:collapse; font-size:.84rem; }
+  th { background:var(--sand); padding:.75rem 1rem; text-align:left; font-weight:600; font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+  td { padding:.75rem 1rem; border-top:1px solid var(--border); vertical-align:middle; }
+  .badge { display:inline-block; padding:.2rem .55rem; border-radius:20px; font-size:.72rem; font-weight:600; }
+  .badge-green { background:#e6f4ef; color:#1a6b4a; }
+  .badge-yellow { background:#fdf3e3; color:#8a5a00; }
+  .badge-red { background:#fdecea; color:var(--red); }
+  .badge-blue { background:#e6f0fb; color:#1a4f8a; }
+  .actions { display:flex; gap:.4rem; }
+  .section-tab { display:none; }
+  .section-tab.active { display:block; }
+
+  /* ── FULL POST ── */
+  .post-full { max-width:720px; margin:0 auto; padding:2rem; }
+  .post-full .post-hero { height:320px; border-radius:12px; background:var(--deep); display:flex; align-items:center; justify-content:center; font-size:5rem; margin-bottom:2rem; }
+  .post-full h1 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:.75rem; }
+  .post-full .post-meta { font-size:.82rem; color:var(--muted); margin-bottom:1.5rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap; }
+  .post-full .body { font-size:.95rem; line-height:1.8; color:var(--text); }
+  .post-full .body p { margin-bottom:1rem; }
+  .post-back { background:none; border:none; color:var(--teal); font-size:.9rem; cursor:pointer; font-family:inherit; font-weight:500; padding:2rem 2rem 0; display:block; }
+  .post-back:hover { text-decoration:underline; }
+
+  /* ── COMMENTS ── */
+  .comments { max-width:720px; margin:0 auto; padding:0 2rem 3rem; }
+  .comments h3 { font-family:'Playfair Display',serif; font-size:1.2rem; margin-bottom:1.25rem; }
+  .comment { display:flex; gap:.85rem; margin-bottom:1.25rem; }
+  .comment-body { flex:1; background:var(--white); border:1px solid var(--border); border-radius:10px; padding:1rem; }
+  .comment-author { font-weight:600; font-size:.85rem; margin-bottom:.35rem; }
+  .comment-text { font-size:.84rem; color:var(--text); line-height:1.6; }
+  .comment-date { font-size:.74rem; color:var(--muted); margin-top:.3rem; }
+  .comment-form { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:1.25rem; margin-top:1.5rem; }
+  .comment-form h4 { font-size:.9rem; font-weight:600; margin-bottom:1rem; }
+
+  /* ── FOOTER ── */
+  footer { background:var(--deep); color:#889; text-align:center; padding:1.5rem; font-size:.8rem; margin-top:3rem; }
+  footer a { color:var(--amber); text-decoration:none; }
+
+  .tag-list { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .tag { background:var(--sand); border:1px solid var(--border); border-radius:20px; padding:.2rem .75rem; font-size:.78rem; cursor:pointer; transition:all .2s; }
+  .tag:hover { background:var(--teal); color:var(--white); border-color:var(--teal); }
+  .divider { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
+  .notice { background:var(--teal-light); border:1.5px solid var(--teal); border-radius:8px; padding:.75rem 1rem; font-size:.83rem; color:var(--teal); margin-bottom:1rem; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <div class="nav-logo" onclick="showView('home')">Wander<span>Log</span></div>
+  <div class="nav-links">
+    <a onclick="showView('home')">Explore</a>
+    <a onclick="showView('home')">Destinations</a>
+    <a onclick="showView('home')">Tips</a>
+    <span id="nav-user" style="display:none; color:#aab; font-size:.82rem;"></span>
+    <button class="btn btn-outline btn-sm" id="btn-login" onclick="openModal('modal-login')">Sign In</button>
+    <button class="btn btn-primary btn-sm" id="btn-register" onclick="openModal('modal-register')">Join Free</button>
+    <button class="btn btn-amber btn-sm" id="btn-admin" style="display:none" onclick="showView('admin')">Admin Panel</button>
+    <button class="btn btn-outline btn-sm" id="btn-logout" style="display:none" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ VIEW: HOME ═══════════════ -->
+<div class="view active" id="view-home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Stories That Move You</h1>
+    <p>Discover real travel experiences, hidden gems, and insider tips from explorers around the world.</p>
+    <div class="hero-btns">
+      <button class="btn btn-amber" onclick="openModal('modal-register')">Share Your Journey</button>
+      <button class="btn btn-outline" style="color:#fff;border-color:#667" onclick="scrollToPosts()">Read Stories</button>
+    </div>
+  </div>
+
+  <!-- Top Ad Banner -->
+  <div style="padding:1.25rem 2rem; max-width:1100px; margin:0 auto;">
+    <div class="ad-banner">
+      <div>
+        <div class="ad-label">✦ Sponsored</div>
+        <div class="ad-text">✈️ Skyscanner — Compare flights to 1,000+ destinations</div>
+        <div class="ad-sub">Find the best deals on flights, hotels and car hire.</div>
+      </div>
+      <button class="btn btn-amber" onclick="alert('Opens Skyscanner affiliate link')">Find Flights →</button>
+    </div>
+  </div>
+
+  <!-- Posts + Sidebar -->
+  <div class="content-layout" id="posts-section">
+    <!-- Posts -->
+    <div>
+      <div class="section-title">Latest Stories</div>
+      <div class="section-sub">Fresh from our community of travellers</div>
+      <div class="posts-grid" id="posts-grid"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Inline Ad -->
+      <div class="ad-banner" style="flex-direction:column;align-items:flex-start;">
+        <div class="ad-label">✦ Partner</div>
+        <div class="ad-text">🏨 Booking.com</div>
+        <div class="ad-sub" style="margin:.3rem 0 .75rem">Accommodation for every budget and style.</div>
+        <button class="btn btn-outline btn-sm" onclick="alert('Opens Booking.com affiliate link')">Book a Stay</button>
+      </div>
+
+      <!-- Categories -->
+      <div class="sidebar-card">
+        <h3>Topics</h3>
+        <div class="tag-list" id="tag-list"></div>
+      </div>
+
+      <!-- About -->
+      <div class="sidebar-card">
+        <h3>About WanderLog</h3>
+        <p style="font-size:.83rem;color:var(--muted);line-height:1.6">A community for passionate travellers. Share your stories, discover new destinations, and connect with explorers worldwide.</p>
+        <hr class="divider">
+        <button class="btn btn-primary" style="width:100%;margin-top:.25rem" onclick="openModal('modal-register')">Join the Community</button>
+      </div>
+
+      <!-- Small Ad -->
+      <div class="ad-banner" style="flex-direction:column;align-items:flex-start;">
+        <div class="ad-label">✦ Sponsored</div>
+        <div class="ad-text">🎒 Osprey Packs</div>
+        <div class="ad-sub" style="margin:.3rem 0 .75rem">Award-winning travel backpacks built for adventure.</div>
+        <button class="btn btn-outline btn-sm" onclick="alert('Opens Osprey affiliate link')">Shop Packs</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 WanderLog · Built with ❤️ for travellers · <a href="#">Privacy</a> · <a href="#">Terms</a>
+  </footer>
+</div>
+
+<!-- ═══════════════ VIEW: FULL POST ═══════════════ -->
+<div class="view" id="view-post">
+  <button class="post-back" onclick="showView('home')">← Back to stories</button>
+  <div class="post-full" id="post-full-content"></div>
+  <!-- Mid-article Ad -->
+  <div style="max-width:720px;margin:0 auto;padding:0 2rem 1.5rem">
+    <div class="ad-banner">
+      <div>
+        <div class="ad-label">✦ Sponsored</div>
+        <div class="ad-text">🌍 World Nomads Travel Insurance</div>
+        <div class="ad-sub">Cover for 150+ adventure activities. Get a quote in minutes.</div>
+      </div>
+      <button class="btn btn-amber btn-sm" onclick="alert('Opens World Nomads affiliate link')">Get Insured →</button>
+    </div>
+  </div>
+  <div class="comments" id="comments-section"></div>
+  <footer>
+    &copy; 2025 WanderLog · <a href="#">Privacy</a> · <a href="#">Terms</a>
+  </footer>
+</div>
+
+<!-- ═══════════════ VIEW: ADMIN ═══════════════ -->
+<div class="view" id="view-admin">
+  <div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar">
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;margin-bottom:1.5rem">WanderLog<br><span style="font-size:.75rem;color:#667;font-family:'DM Sans',sans-serif">Admin Panel</span></div>
+      <h3>Content</h3>
+      <div class="admin-nav-item active" onclick="adminTab('tab-posts',this)">📝 Posts</div>
+      <div class="admin-nav-item" onclick="adminTab('tab-new-post',this)">✚ New Post</div>
+      <h3>Community</h3>
+      <div class="admin-nav-item" onclick="adminTab('tab-users',this)">👥 Users</div>
+      <div class="admin-nav-item" onclick="adminTab('tab-comments',this)">💬 Comments</div>
+      <h3>Monetisation</h3>
+      <div class="admin-nav-item" onclick="adminTab('tab-ads',this)">📢 Ads Manager</div>
+      <hr style="border-color:#334;margin:1.5rem 0">
+      <div class="admin-nav-item" onclick="showView('home')" style="color:#889">← View Site</div>
+    </div>
+
+    <!-- Admin Main -->
+    <div class="admin-main">
+      <div id="admin-msg"></div>
+
+      <!-- ── Tab: Posts ── -->
+      <div class="section-tab active" id="tab-posts">
+        <div class="admin-header">
+          <div><h1>All Posts</h1><p>Manage published and pending articles</p></div>
+          <button class="btn btn-primary" onclick="adminTab('tab-new-post',document.querySelectorAll('.admin-nav-item')[1])">+ New Post</button>
+        </div>
+        <div class="table-wrap">
+          <table id="admin-posts-table">
+            <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="admin-posts-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Tab: New Post ── -->
+      <div class="section-tab" id="tab-new-post">
+        <div class="admin-header"><div><h1>New Post</h1><p>Write and publish a travel story</p></div></div>
+        <div style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:1.5rem">
+          <div class="form-group"><label>Post Title</label><input type="text" id="new-title" placeholder="e.g. Hidden Waterfalls of Bali"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Category</label>
+              <select id="new-cat">
+                <option>Southeast Asia</option><option>Europe</option><option>South America</option>
+                <option>Africa</option><option>North America</option><option>Oceania</option><option>Travel Tips</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Emoji / Cover</label><input type="text" id="new-emoji" placeholder="🌴" value="✈️"></div>
+          </div>
+          <div class="form-group"><label>Excerpt (shown on cards)</label><textarea id="new-excerpt" rows="2" placeholder="A short teaser for the post..."></textarea></div>
+          <div class="form-group"><label>Full Content</label><textarea id="new-content" rows="8" placeholder="Write your full travel story here..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Status</label>
+              <select id="new-status"><option value="published">Published</option><option value="draft">Draft</option></select>
+            </div>
+            <div class="form-group"><label>Author Name</label><input type="text" id="new-author" placeholder="Your name"></div>
+          </div>
+          <button class="btn btn-primary" onclick="adminPublishPost()">Publish Post</button>
+          <button class="btn btn-outline" style="margin-left:.75rem" onclick="adminTab('tab-posts',document.querySelectorAll('.admin-nav-item')[0])">Cancel</button>
+        </div>
+      </div>
+
+      <!-- ── Tab: Edit Post ── -->
+      <div class="section-tab" id="tab-edit-post">
+        <div class="admin-header"><div><h1>Edit Post</h1><p>Modify an existing article</p></div></div>
+        <div style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:1.5rem">
+          <input type="hidden" id="edit-id">
+          <div class="form-group"><label>Post Title</label><input type="text" id="edit-title"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Category</label>
+              <select id="edit-cat">
+                <option>Southeast Asia</option><option>Europe</option><option>South America</option>
+                <option>Africa</option><option>North America</option><option>Oceania</option><option>Travel Tips</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Emoji / Cover</label><input type="text" id="edit-emoji"></div>
+          </div>
+          <div class="form-group"><label>Excerpt</label><textarea id="edit-excerpt" rows="2"></textarea></div>
+          <div class="form-group"><label>Full Content</label><textarea id="edit-content" rows="8"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Status</label>
+              <select id="edit-status"><option value="published">Published</option><option value="draft">Draft</option></select>
+            </div>
+            <div class="form-group"><label>Author</label><input type="text" id="edit-author"></div>
+          </div>
+          <button class="btn btn-primary" onclick="adminSaveEdit()">Save Changes</button>
+          <button class="btn btn-outline" style="margin-left:.75rem" onclick="adminTab('tab-posts',document.querySelectorAll('.admin-nav-item')[0])">Cancel</button>
+        </div>
+      </div>
+
+      <!-- ── Tab: Users ── -->
+      <div class="section-tab" id="tab-users">
+        <div class="admin-header"><div><h1>Registered Users</h1><p>Manage community members</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Posts</th><th>Actions</th></tr></thead>
+            <tbody id="admin-users-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Tab: Comments ── -->
+      <div class="section-tab" id="tab-comments">
+        <div class="admin-header"><div><h1>Comments</h1><p>Moderate reader comments</p></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Comment</th><th>Author</th><th>Post</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="admin-comments-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Tab: Ads Manager ── -->
+      <div class="section-tab" id="tab-ads">
+        <div class="admin-header"><div><h1>Ads Manager</h1><p>Configure travel-related advertisements</p></div></div>
+        <div class="notice">ℹ️ All ads must be travel-related (flights, hotels, tours, gear, insurance). Non-travel ads are not permitted.</div>
+        <div class="table-wrap" style="margin-bottom:1.5rem">
+          <table id="ads-table">
+            <thead><tr><th>Ad Name</th><th>Type</th><th>Placement</th><th>Status</th><th>Link</th><th>Actions</th></tr></thead>
+            <tbody id="admin-ads-body"></tbody>
+          </table>
+        </div>
+        <div style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:1.5rem">
+          <h3 style="font-family:'Playfair Display',serif;margin-bottom:1.25rem">Add New Ad</h3>
+          <div class="form-row">
+            <div class="form-group"><label>Ad Name / Brand</label><input type="text" id="ad-name" placeholder="e.g. Skyscanner"></div>
+            <div class="form-group"><label>Type</label>
+              <select id="ad-type"><option>Flights</option><option>Hotels</option><option>Tours</option><option>Gear</option><option>Insurance</option><option>Car Hire</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Placement</label>
+              <select id="ad-placement"><option>Top Banner</option><option>Sidebar</option><option>Mid-Article</option><option>Footer</option></select>
+            </div>
+            <div class="form-group"><label>Destination URL</label><input type="text" id="ad-url" placeholder="https://..."></div>
+          </div>
+          <div class="form-group"><label>Ad Text / Tagline</label><input type="text" id="ad-text" placeholder="Short compelling message..."></div>
+          <button class="btn btn-primary" onclick="adminAddAd()">Add Ad</button>
+        </div>
+      </div>
+
+    </div><!-- /admin-main -->
+  </div>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Login -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <h2>Welcome Back</h2>
+    <p class="sub">Sign in to your WanderLog account</p>
+    <div id="login-msg"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="your@email.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-login')">Cancel</button>
+      <button class="btn btn-primary" onclick="doLogin()">Sign In</button>
+    </div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:1rem;text-align:center">No account? <a style="color:var(--teal);cursor:pointer" onclick="closeModal('modal-login');openModal('modal-register')">Register free</a></p>
+    <hr class="divider">
+    <p style="font-size:.75rem;color:var(--muted)"><strong>Demo admin:</strong> admin@wanderlog.com / admin123</p>
+  </div>
+</div>
+
+<!-- Register -->
+<div class="modal-overlay" id="modal-register">
+  <div class="modal">
+    <h2>Join WanderLog</h2>
+    <p class="sub">Create your free account to share travel stories</p>
+    <div id="register-msg"></div>
+    <div class="form-row">
+      <div class="form-group"><label>First Name</label><input type="text" id="reg-first" placeholder="Ada"></div>
+      <div class="form-group"><label>Last Name</label><input type="text" id="reg-last" placeholder="Lovelace"></div>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="your@email.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="At least 6 characters"></div>
+    <div class="form-group"><label>Home Country</label><input type="text" id="reg-country" placeholder="United Kingdom"></div>
+    <div class="form-group">
+      <label><input type="checkbox" id="reg-agree" style="width:auto;margin-right:.4rem"> I agree to the <a href="#" style="color:var(--teal)">Terms of Service</a> and community guidelines</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-register')">Cancel</button>
+      <button class="btn btn-primary" onclick="doRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reader Post Submission -->
+<div class="modal-overlay" id="modal-submit-post">
+  <div class="modal">
+    <h2>Share Your Story</h2>
+    <p class="sub">Submit a travel post for review by our editors</p>
+    <div id="submit-msg"></div>
+    <div class="form-group"><label>Post Title</label><input type="text" id="sub-title" placeholder="e.g. 10 Days in Morocco"></div>
+    <div class="form-group"><label>Destination / Category</label>
+      <select id="sub-cat">
+        <option>Southeast Asia</option><option>Europe</option><option>South America</option>
+        <option>Africa</option><option>North America</option><option>Oceania</option><option>Travel Tips</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Short Excerpt</label><textarea id="sub-excerpt" rows="2" placeholder="A teaser that entices readers..."></textarea></div>
+    <div class="form-group"><label>Your Story</label><textarea id="sub-content" rows="6" placeholder="Write your travel story..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('modal-submit-post')">Cancel</button>
+      <button class="btn btn-primary" onclick="doSubmitPost()">Submit for Review</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA STORE ═══
+const db = {
+  posts: [
+    { id:1, title:'Hidden Temples of Kyoto: Beyond the Tourist Trail', author:'Sarah K.', cat:'Southeast Asia', emoji:'⛩️', excerpt:'Most visitors only see Fushimi Inari and Kinkakuji — but Kyoto hides dozens of serene, crowd-free temples just minutes away.', content:'Most visitors to Kyoto follow the same well-worn path between the golden pavilion and the vermilion torii gates. But venture off the main streets and you discover a quieter Kyoto — one where moss-covered stones and the scent of incense lead you to sanctuaries that have stood for a thousand years.\n\nStart your morning at Fushimi Inari before the crowds arrive, ideally by 7am. The early light through the torii is extraordinary. Then take the Kintetsu line south to Tofuku-ji, a vast Zen complex whose garden is one of Japan\'s finest.\n\nFor lunch, duck into Nishiki Market — a covered arcade of street food stalls stretching for blocks. Try the fresh-grilled mochi, pickled plums, and sesame tofu. In the afternoon, hire a bicycle and pedal north toward Kuramadera, a mountain temple reached via a beautiful forest trail. The evening views over the city from the upper precinct are worth every step.', status:'published', date:'2 Jan 2025', approved:true },
+    { id:2, title:'The Dolomites on a Budget: A Complete Guide', author:'Marco B.', cat:'Europe', emoji:'🏔️', excerpt:'Italy\'s most dramatic mountain range is more accessible than you think — with wild camping, free hikes, and €8 pasta dinners.', content:'The Dolomites are one of Europe\'s most spectacular landscapes, and contrary to popular belief, you don\'t need to splurge on a luxury chalet to experience them. With some planning, a week here is entirely affordable.\n\nBase yourself in Cortina d\'Ampezzo or the smaller village of Misurina for cheaper accommodation. Wild camping is technically restricted in the national park, but bivouacking above 1600m for a single night is generally tolerated — check local rules. The Tre Cime di Lavaredo circuit is entirely free to hike and takes about 3-4 hours at a comfortable pace.\n\nFor food, avoid the rifugio restaurants on the main trails. Instead, descend to the valley towns where a full pasta meal with wine costs under €15. The local Ladin cuisine — canederli (bread dumplings) in broth — is hearty, cheap, and delicious. Hire an e-bike to cover the high mountain passes without the gruelling climbs.', status:'published', date:'15 Dec 2024', approved:true },
+    { id:3, title:'Solo in Marrakech: What Nobody Tells You', author:'Amara T.', cat:'Africa', emoji:'🕌', excerpt:'The medina can feel overwhelming at first — but lean into the chaos and Marrakech reveals a city of extraordinary warmth and beauty.', content:'My first morning in Marrakech was genuinely disorientating. The medina\'s labyrinthine lanes, the constant calls from spice merchants, the motorbikes appearing from nowhere — it is a full sensory assault. By day three, it had become my favourite place on earth.\n\nThe key is to abandon the idea of navigating efficiently. Get lost deliberately. The best moments come from wandering into a courtyard to find a craftsman pressing olive oil, or stumbling upon a neighbourhood hammam that charges locals\' prices rather than tourist rates.\n\nJemaa el-Fna square transforms completely between day and night. By day it\'s relatively calm — a few snake charmers and juice stalls. By night it becomes a vast open-air restaurant and theatre, with dozens of food stalls, storytellers, and musicians competing for your attention. Eat the harira soup and the slow-cooked lamb tagine. Avoid the tourist restaurants with photographs on the menu.', status:'published', date:'3 Nov 2024', approved:true },
+    { id:4, title:'Road-Tripping the Scottish Highlands in November', author:'Jamie H.', cat:'Europe', emoji:'🏴󠁧󠁢󠁳󠁣󠁴󠁿', excerpt:'Off-season driving through one of Britain\'s wildest landscapes — moody skies, empty roads, and whisky distillery stops.', content:'November is not the obvious choice for the Highlands, but it might be the best one. The summer hordes have gone, the midges are dead, the heather has turned amber, and the light — when it appears between the cloud breaks — is astonishing.\n\nFly into Inverness and pick up a car. The North Coast 500 route is well-known now, but driving it anti-clockwise in late autumn you will share the road with almost no one. Stop at Dunrobin Castle in the morning before it closes for winter. Push on to Tongue for the night — there\'s a small pub with a coal fire and excellent pie.\n\nThe whisky distillery stops are a genuine highlight. Glenmorangie, Balblair, and Clynelish are all within a short detour of the main route, and most offer tours for under £15 that end with a generous dram. If you only visit one, make it Royal Brora, recently reopened after a 40-year closure.', status:'published', date:'20 Oct 2024', approved:true },
+    { id:5, title:'Backpacking Vietnam End to End', author:'Pending Review', cat:'Southeast Asia', emoji:'🛵', excerpt:'A submitted reader story about travelling from Hanoi to Ho Chi Minh City over six weeks on a motorbike.', content:'Reader-submitted content pending editorial review.', status:'draft', date:'10 Jan 2025', approved:false }
+  ],
+  users: [
+    { id:1, first:'Admin', last:'User', email:'admin@wanderlog.com', pass:'admin123', role:'admin', country:'UK', joined:'Jan 2024', posts:12 },
+    { id:2, first:'Sarah', last:'K.', email:'sarah@example.com', pass:'pass123', role:'reader', country:'Australia', joined:'Mar 2024', posts:3 },
+    { id:3, first:'Marco', last:'B.', email:'marco@example.com', pass:'pass123', role:'reader', country:'Italy', joined:'May 2024', posts:2 }
+  ],
+  comments: [
+    { id:1, postId:1, author:'Marco B.', text:'Absolutely wonderful piece — I had no idea about Tofuku-ji, adding it to my list immediately!', date:'3 Jan 2025', status:'approved' },
+    { id:2, postId:2, author:'Sarah K.', text:'The wild camping tip is gold. Did exactly this near Lago di Braies last summer.', date:'16 Dec 2024', status:'approved' },
+    { id:3, postId:3, author:'New User', text:'Is it safe for solo women travellers? Interested in visiting next spring.', date:'5 Nov 2024', status:'pending' }
+  ],
+  ads: [
+    { id:1, name:'Skyscanner', type:'Flights', placement:'Top Banner', status:'active', url:'https://skyscanner.net' },
+    { id:2, name:'Booking.com', type:'Hotels', placement:'Sidebar', status:'active', url:'https://booking.com' },
+    { id:3, name:'World Nomads', type:'Insurance', placement:'Mid-Article', status:'active', url:'https://worldnomads.com' }
+  ],
+  currentUser: null,
+  nextPostId: 6,
+  nextUserId: 4,
+  nextAdId: 4
+};
+
+// ═══ VIEWS ═══
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  if (name === 'home') renderPosts();
+  if (name === 'admin') { requireAdmin(); renderAdminPosts(); renderAdminUsers(); renderAdminComments(); renderAdminAds(); }
+  window.scrollTo(0,0);
+}
+
+function requireAdmin() {
+  if (!db.currentUser || db.currentUser.role !== 'admin') {
+    showView('home');
+    alert('Admin access required. Please sign in as admin.');
+  }
+}
+
+function scrollToPosts() {
+  document.getElementById('posts-section').scrollIntoView({ behavior:'smooth' });
+}
+
+// ═══ AUTH ═══
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const user  = db.users.find(u => u.email === email && u.pass === pass);
+  if (!user) { showMsg('login-msg','error','Invalid email or password.'); return; }
+  db.currentUser = user;
+  closeModal('modal-login');
+  updateNav();
+  if (user.role === 'admin') showView('admin');
+}
+
+function doRegister() {
+  const first   = document.getElementById('reg-first').value.trim();
+  const last    = document.getElementById('reg-last').value.trim();
+  const email   = document.getElementById('reg-email').value.trim();
+  const pass    = document.getElementById('reg-pass').value;
+  const country = document.getElementById('reg-country').value.trim();
+  const agree   = document.getElementById('reg-agree').checked;
+  if (!first||!last||!email||!pass) { showMsg('register-msg','error','Please fill all required fields.'); return; }
+  if (pass.length < 6) { showMsg('register-msg','error','Password must be at least 6 characters.'); return; }
+  if (!agree) { showMsg('register-msg','error','Please accept the terms to continue.'); return; }
+  if (db.users.find(u => u.email === email)) { showMsg('register-msg','error','That email is already registered.'); return; }
+  const newUser = { id:db.nextUserId++, first, last, email, pass, role:'reader', country, joined:new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'}), posts:0 };
+  db.users.push(newUser);
+  db.currentUser = newUser;
+  closeModal('modal-register');
+  updateNav();
+  showMsg('admin-msg','','');
+}
+
+function logout() {
+  db.currentUser = null;
+  updateNav();
+  showView('home');
+}
+
+function updateNav() {
+  const u = db.currentUser;
+  document.getElementById('btn-login').style.display    = u ? 'none' : '';
+  document.getElementById('btn-register').style.display = u ? 'none' : '';
+  document.getElementById('btn-logout').style.display   = u ? '' : 'none';
+  document.getElementById('btn-admin').style.display    = (u && u.role==='admin') ? '' : 'none';
+  const navUser = document.getElementById('nav-user');
+  if (u) { navUser.style.display=''; navUser.textContent = 'Hi, ' + u.first; }
+  else navUser.style.display='none';
+}
+
+// ═══ POSTS (HOME) ═══
+function renderPosts() {
+  const grid = document.getElementById('posts-grid');
+  const published = db.posts.filter(p => p.status === 'published' && p.approved);
+  grid.innerHTML = published.map(p => `
+    <div class="card">
+      <div class="card-img">${p.emoji}</div>
+      <div class="card-body">
+        <span class="card-tag">${p.cat}</span>
+        <div class="card-title">${p.title}</div>
+        <div class="card-excerpt">${p.excerpt}</div>
+        <div class="card-meta">
+          <div class="card-author">
+            <div class="avatar">${p.author[0]}</div>
+            <span>${p.author}</span>
+          </div>
+          <button class="card-read-btn" onclick="openPost(${p.id})">Read →</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const tags = [...new Set(db.posts.map(p => p.cat))];
+  document.getElementById('tag-list').innerHTML = tags.map(t => `<div class="tag">${t}</div>`).join('');
+}
+
+function openPost(id) {
+  const p = db.posts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('post-full-content').innerHTML = `
+    <div class="post-hero">${p.emoji}</div>
+    <span class="card-tag">${p.cat}</span>
+    <h1>${p.title}</h1>
+    <div class="post-meta">
+      <div class="card-author"><div class="avatar">${p.author[0]}</div><span>${p.author}</span></div>
+      <span>· ${p.date}</span>
+    </div>
+    <div class="body">${p.content.split('\n').map(para => para ? `<p>${para}</p>` : '').join('')}</div>
+  `;
+
+  const postComments = db.comments.filter(c => c.postId === id && c.status === 'approved');
+  const loginNote = db.currentUser ? '' : '<p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">You must be <a style="color:var(--teal);cursor:pointer" onclick="openModal(\'modal-login\')">signed in</a> to leave a comment.</p>';
+  document.getElementById('comments-section').innerHTML = `
+    <h3>Comments (${postComments.length})</h3>
+    ${postComments.map(c => `
+      <div class="comment">
+        <div class="avatar" style="width:34px;height:34px;font-size:.8rem;flex-shrink:0">${c.author[0]}</div>
+        <div class="comment-body">
+          <div class="comment-author">${c.author}</div>
+          <div class="comment-text">${c.text}</div>
+          <div class="comment-date">${c.date}</div>
+        </div>
+      </div>
+    `).join('')}
+    <div class="comment-form">
+      <h4>Leave a Comment</h4>
+      ${loginNote}
+      ${db.currentUser ? `
+        <textarea id="comment-text-${id}" placeholder="Share your thoughts or travel tips..." rows="3" style="margin-bottom:.75rem"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="submitComment(${id})">Post Comment</button>
+      ` : ''}
+    </div>
+    ${db.currentUser ? `<div style="margin-top:1.5rem"><button class="btn btn-outline" onclick="openModal('modal-submit-post')">✍️ Share Your Own Story</button></div>` : ''}
+  `;
+  showView('post');
+}
+
+function submitComment(postId) {
+  const ta = document.getElementById('comment-text-' + postId);
+  if (!ta || !ta.value.trim()) return;
+  db.comments.push({ id: Date.now(), postId, author: db.currentUser.first + ' ' + db.currentUser.last[0] + '.', text: ta.value.trim(), date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), status:'approved' });
+  openPost(postId);
+}
+
+// ═══ READER POST SUBMISSION ═══
+function doSubmitPost() {
+  if (!db.currentUser) { showMsg('submit-msg','error','Please sign in first.'); return; }
+  const title   = document.getElementById('sub-title').value.trim();
+  const cat     = document.getElementById('sub-cat').value;
+  const excerpt = document.getElementById('sub-excerpt').value.trim();
+  const content = document.getElementById('sub-content').value.trim();
+  if (!title||!excerpt||!content) { showMsg('submit-msg','error','Please fill all fields.'); return; }
+  db.posts.push({ id:db.nextPostId++, title, author:db.currentUser.first+' '+db.currentUser.last, cat, emoji:'📖', excerpt, content, status:'draft', date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), approved:false });
+  db.currentUser.posts++;
+  showMsg('submit-msg','success','Your story has been submitted for review. Thank you!');
+  setTimeout(() => closeModal('modal-submit-post'), 2000);
+}
+
+// ═══ ADMIN POSTS ═══
+function renderAdminPosts() {
+  document.getElementById('admin-posts-body').innerHTML = db.posts.map(p => `
+    <tr>
+      <td>${p.emoji} ${p.title}</td>
+      <td>${p.author}</td>
+      <td>${p.cat}</td>
+      <td><span class="badge ${p.status==='published'&&p.approved?'badge-green':p.status==='draft'?'badge-yellow':'badge-blue'}">${p.approved?p.status:'pending review'}</span></td>
+      <td>${p.date}</td>
+      <td class="actions">
+        <button class="btn btn-outline btn-sm" onclick="adminEditPost(${p.id})">Edit</button>
+        ${!p.approved ? `<button class="btn btn-primary btn-sm" onclick="adminApprovePost(${p.id})">Approve</button>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="adminDeletePost(${p.id})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function adminPublishPost() {
+  const title   = document.getElementById('new-title').value.trim();
+  const cat     = document.getElementById('new-cat').value;
+  const emoji   = document.getElementById('new-emoji').value.trim() || '✈️';
+  const excerpt = document.getElementById('new-excerpt').value.trim();
+  const content = document.getElementById('new-content').value.trim();
+  const status  = document.getElementById('new-status').value;
+  const author  = document.getElementById('new-author').value.trim() || 'Admin';
+  if (!title||!excerpt||!content) { showAdminMsg('error','Please fill all required fields.'); return; }
+  db.posts.push({ id:db.nextPostId++, title, author, cat, emoji, excerpt, content, status, date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), approved:true });
+  showAdminMsg('success','Post published successfully!');
+  adminTab('tab-posts', document.querySelectorAll('.admin-nav-item')[0]);
+  renderAdminPosts();
+  ['new-title','new-excerpt','new-content','new-author'].forEach(id => document.getElementById(id).value='');
+}
+
+function adminEditPost(id) {
+  const p = db.posts.find(x => x.id===id);
+  if (!p) return;
+  document.getElementById('edit-id').value       = id;
+  document.getElementById('edit-title').value    = p.title;
+  document.getElementById('edit-cat').value      = p.cat;
+  document.getElementById('edit-emoji').value    = p.emoji;
+  document.getElementById('edit-excerpt').value  = p.excerpt;
+  document.getElementById('edit-content').value  = p.content;
+  document.getElementById('edit-status').value   = p.status;
+  document.getElementById('edit-author').value   = p.author;
+  adminTab('tab-edit-post', null);
+}
+
+function adminSaveEdit() {
+  const id = parseInt(document.getElementById('edit-id').value);
+  const p  = db.posts.find(x => x.id===id);
+  if (!p) return;
+  p.title   = document.getElementById('edit-title').value;
+  p.cat     = document.getElementById('edit-cat').value;
+  p.emoji   = document.getElementById('edit-emoji').value;
+  p.excerpt = document.getElementById('edit-excerpt').value;
+  p.content = document.getElementById('edit-content').value;
+  p.status  = document.getElementById('edit-status').value;
+  p.author  = document.getElementById('edit-author').value;
+  showAdminMsg('success','Post updated successfully!');
+  adminTab('tab-posts', document.querySelectorAll('.admin-nav-item')[0]);
+  renderAdminPosts();
+}
+
+function adminApprovePost(id) {
+  const p = db.posts.find(x => x.id===id);
+  if (p) { p.approved=true; p.status='published'; }
+  renderAdminPosts();
+  showAdminMsg('success','Post approved and published.');
+}
+
+function adminDeletePost(id) {
+  if (!confirm('Delete this post permanently?')) return;
+  const idx = db.posts.findIndex(x => x.id===id);
+  if (idx > -1) db.posts.splice(idx,1);
+  renderAdminPosts();
+  showAdminMsg('success','Post deleted.');
+}
+
+// ═══ ADMIN USERS ═══
+function renderAdminUsers() {
+  document.getElementById('admin-users-body').innerHTML = db.users.map(u => `
+    <tr>
+      <td>${u.first} ${u.last}</td>
+      <td>${u.email}</td>
+      <td><span class="badge ${u.role==='admin'?'badge-blue':'badge-green'}">${u.role}</span></td>
+      <td>${u.joined}</td>
+      <td>${u.posts}</td>
+      <td class="actions">
+        ${u.role!=='admin'?`<button class="btn btn-danger btn-sm" onclick="adminDeleteUser(${u.id})">Remove</button>`:'<span style="color:var(--muted);font-size:.78rem">Protected</span>'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function adminDeleteUser(id) {
+  if (!confirm('Remove this user?')) return;
+  const idx = db.users.findIndex(x => x.id===id);
+  if (idx > -1) db.users.splice(idx,1);
+  renderAdminUsers();
+  showAdminMsg('success','User removed.');
+}
+
+// ═══ ADMIN COMMENTS ═══
+function renderAdminComments() {
+  const allComments = db.comments;
+  document.getElementById('admin-comments-body').innerHTML = allComments.map(c => {
+    const post = db.posts.find(p => p.id===c.postId);
+    return `
+      <tr>
+        <td style="max-width:300px">${c.text.substring(0,80)}${c.text.length>80?'…':''}</td>
+        <td>${c.author}</td>
+        <td style="font-size:.78rem">${post?post.title.substring(0,30)+'…':'Unknown'}</td>
+        <td><span class="badge ${c.status==='approved'?'badge-green':'badge-yellow'}">${c.status}</span></td>
+        <td class="actions">
+          ${c.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="approveComment(${c.id})">Approve</button>`:''}
+          <button class="btn btn-danger btn-sm" onclick="deleteComment(${c.id})">Delete</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function approveComment(id) {
+  const c = db.comments.find(x => x.id===id);
+  if (c) c.status='approved';
+  renderAdminComments();
+}
+function deleteComment(id) {
+  const idx = db.comments.findIndex(x => x.id===id);
+  if (idx > -1) db.comments.splice(idx,1);
+  renderAdminComments();
+}
+
+// ═══ ADMIN ADS ═══
+function renderAdminAds() {
+  document.getElementById('admin-ads-body').innerHTML = db.ads.map(a => `
+    <tr>
+      <td>${a.name}</td>
+      <td>${a.type}</td>
+      <td>${a.placement}</td>
+      <td><span class="badge ${a.status==='active'?'badge-green':'badge-yellow'}">${a.status}</span></td>
+      <td style="font-size:.78rem;color:var(--teal)">${a.url}</td>
+      <td class="actions">
+        <button class="btn btn-outline btn-sm" onclick="toggleAd(${a.id})">${a.status==='active'?'Pause':'Activate'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAd(${a.id})">Remove</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function adminAddAd() {
+  const name  = document.getElementById('ad-name').value.trim();
+  const type  = document.getElementById('ad-type').value;
+  const plcmt = document.getElementById('ad-placement').value;
+  const url   = document.getElementById('ad-url').value.trim();
+  const text  = document.getElementById('ad-text').value.trim();
+  if (!name||!url) { showAdminMsg('error','Please provide a name and URL.'); return; }
+  db.ads.push({ id:db.nextAdId++, name, type, placement:plcmt, status:'active', url, text });
+  renderAdminAds();
+  showAdminMsg('success','Ad added successfully!');
+  ['ad-name','ad-url','ad-text'].forEach(id => document.getElementById(id).value='');
+}
+
+function toggleAd(id) {
+  const a = db.ads.find(x => x.id===id);
+  if (a) a.status = a.status==='active'?'paused':'active';
+  renderAdminAds();
+}
+function deleteAd(id) {
+  if (!confirm('Remove this ad?')) return;
+  const idx = db.ads.findIndex(x => x.id===id);
+  if (idx > -1) db.ads.splice(idx,1);
+  renderAdminAds();
+}
+
+// ═══ ADMIN TAB ═══
+function adminTab(tabId, navEl) {
+  document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if (navEl) {
+    document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+}
+
+// ═══ UTILS ═══
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target===m) m.classList.remove('open'); }));
+
+function showMsg(elId, type, text) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = text ? `<div class="msg ${type}">${text}</div>` : '';
+}
+function showAdminMsg(type, text) {
+  const el = document.getElementById('admin-msg');
+  el.innerHTML = `<div class="msg ${type==='success'?'success':'error'}">${text}</div>`;
+  setTimeout(() => { el.innerHTML=''; }, 3000);
+}
+
+// Init
+renderPosts();
+</script>
+</body>
+</html>
