@@ -7,85 +7,45 @@
 <link id="favicon" rel="icon" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/2708.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
-
 <script>
-// ╔══════════════════════════════════════════════════════════════╗
-// ║              SITE CUSTOMISATION CONFIG                       ║
-// ║  Edit the values below to personalise your blog.            ║
-// ╚══════════════════════════════════════════════════════════════╝
 const SITE_CONFIG = {
-
-  // ── BRAND ──────────────────────────────────────────────────────
-  siteName:    "WanderLog",           // Your blog's name
-  tagline:     "Stories That Move You", // Hero headline
+  siteName:    "WanderLog",
+  tagline:     "Stories That Move You",
   description: "Discover real travel experiences, hidden gems, and insider tips from explorers around the world.",
-  adminEmail:  "admin@wanderlog.com", // Must match admin row in Supabase users table
-
-  // ── LOGO ───────────────────────────────────────────────────────
-  // Option A: use a text logo (default). Set logoUrl to "" to use text.
-  // Option B: set logoUrl to a URL of your logo image (PNG/SVG/WebP).
-  //   You can upload your logo to https://imgbb.com (free) and paste
-  //   the direct image link here.
-  //   Example: logoUrl: "https://i.ibb.co/abc123/my-logo.png"
+  adminEmail:  "admin@wanderlog.com",
   logoUrl:     "",
-  logoHeight:  "36px",                // Logo image height (if using image)
-
-  // ── HERO SECTION ───────────────────────────────────────────────
-  // Option A: solid colour (default) – leave heroBgImage blank
-  // Option B: background image. Upload a wide landscape photo to
-  //   https://imgbb.com and paste the direct link here.
-  //   Recommended size: 1600 × 600 px
+  logoHeight:  "36px",
   heroBgImage: "",
-  heroBgColor: "#1A2332",             // Used when no image is set
-
-  // ── COLOUR PALETTE ─────────────────────────────────────────────
-  // Change any hex code to repaint the whole site instantly.
-  // Use https://coolors.co to explore colour combinations.
+  heroBgColor: "#1A2332",
   colors: {
-    navBg:        "#1A2332",  // Navigation bar background
-    pageBg:       "#F5F0E8",  // Page background (light sand)
-    accent:       "#2A7B6F",  // Primary accent (teal) – buttons, tags
-    accentLight:  "#E0F0ED",  // Light version of accent
-    highlight:    "#C8883A",  // Highlight / call-to-action colour (amber)
-    highlightLight:"#FDF3E3", // Light version of highlight
-    text:         "#2C3240",  // Body text
-    muted:        "#7A8190",  // Secondary / muted text
-    border:       "#E2DDD4",  // Borders and dividers
-    cardBg:       "#FFFFFF",  // Post card background
+    navBg:         "#1A2332",
+    pageBg:        "#F5F0E8",
+    accent:        "#2A7B6F",
+    accentLight:   "#E0F0ED",
+    highlight:     "#C8883A",
+    highlightLight:"#FDF3E3",
+    text:          "#2C3240",
+    muted:         "#7A8190",
+    border:        "#E2DDD4",
+    cardBg:        "#FFFFFF",
   },
-
-  // ── TYPOGRAPHY ─────────────────────────────────────────────────
-  // Pick any font pair from https://fonts.google.com
-  // After changing, also update the Google Fonts <link> in the <head>.
   headingFont: "'Playfair Display', serif",
   bodyFont:    "'DM Sans', sans-serif",
-
-  // ── CATEGORIES ─────────────────────────────────────────────────
-  // Add or remove travel categories as needed.
   categories: [
     "Southeast Asia", "Europe", "South America", "Africa",
     "North America", "Oceania", "Middle East", "Travel Tips"
   ],
-
-  // ── ADS ────────────────────────────────────────────────────────
-  // You can also manage ads from the Admin Panel.
-  // All ads must be travel-related per site policy.
   defaultAds: [
-    { name:"Skyscanner",       type:"Flights",   placement:"Top Banner",  url:"https://skyscanner.net",    tagline:"Compare flights to 1,000+ destinations",    emoji:"✈️" },
-    { name:"Booking.com",      type:"Hotels",    placement:"Sidebar",     url:"https://booking.com",       tagline:"Accommodation for every budget and style.",  emoji:"🏨" },
-    { name:"World Nomads",     type:"Insurance", placement:"Mid-Article", url:"https://worldnomads.com",   tagline:"Cover for 150+ adventure activities.",       emoji:"🌍" },
-    { name:"Osprey Packs",     type:"Gear",      placement:"Sidebar",     url:"https://ospreypacks.com",   tagline:"Award-winning travel backpacks.",            emoji:"🎒" },
+    { name:"Skyscanner",   type:"Flights",   placement:"Top Banner",  url:"https://skyscanner.net",  tagline:"Compare flights to 1,000+ destinations",   emoji:"✈️" },
+    { name:"Booking.com",  type:"Hotels",    placement:"Sidebar",     url:"https://booking.com",     tagline:"Accommodation for every budget and style.", emoji:"🏨" },
+    { name:"World Nomads", type:"Insurance", placement:"Mid-Article", url:"https://worldnomads.com", tagline:"Cover for 150+ adventure activities.",      emoji:"🌍" },
+    { name:"Osprey Packs", type:"Gear",      placement:"Sidebar",     url:"https://ospreypacks.com", tagline:"Award-winning travel backpacks.",           emoji:"🎒" },
   ],
-
-  // ── SUPABASE (PERSISTENT DATA STORAGE) ─────────────────────────
-  // Follow the setup steps at the top of this file.
-  // Leave blank to run in demo mode (data resets on refresh).
   supabase: {
-    url: "https://rnzpsiahhutmvbzwamxt.supabase.co",   // e.g. "https://abcdefgh.supabase.co"
-    key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJuenBzaWFoaHV0bXZiendhbXh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NDk3NjYsImV4cCI6MjA5NTEyNTc2Nn0.lAlSHqKpL5kl7pVdEpujHS2S1NCZ7a8bmj5iEy4eQcs",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5c..."
+    url: "https://rnzpsiahhutmvbzwamxt.supabase.co",
+    key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJuenBzaWFoaHV0bXZiendhbXh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NDk3NjYsImV4cCI6MjA5NTEyNTc2Nn0.lAlSHqKpL5kl7pVdEpujHS2S1NCZ7a8bmj5iEy4eQcs",
   }
 };
-// ╚══════════════════════════════════════════════════════════════╝
 </script>
 
 <style id="dynamic-styles">/* injected by JS */</style>
@@ -575,7 +535,6 @@ footer a { color:var(--highlight); text-decoration:none; }
                          APPLICATION LOGIC
 ════════════════════════════════════════════════════════════════ -->
 <script>
-// ── Image Input Widget helpers ─────────────────────────────────
 
 // Track selected files per context ('new' | 'edit')
 const imgSelectedFile = {};
@@ -645,7 +604,6 @@ async function imgUpload(ctx, targetInputId) {
   const file = imgSelectedFile[ctx];
   if (!file) { imgSetStatus(ctx, 'err', 'No file selected.'); return; }
 
-  // ── Supabase Storage upload ──────────────────────────────────
   if (SB) {
     const ext  = file.name.split('.').pop();
     const path = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -680,7 +638,6 @@ async function imgUpload(ctx, targetInputId) {
     return;
   }
 
-  // ── Fallback (no Supabase): use a temporary object URL ───────
   // This only persists for the current session but lets demo mode work.
   const objectUrl = URL.createObjectURL(file);
   document.getElementById(targetInputId).value = objectUrl;
@@ -702,7 +659,6 @@ function imgWidgetReset(ctx) {
   document.getElementById(`${ctx}-upload-progress`)?.classList.remove('show');
 }
 
-// ── Apply config to CSS variables ──────────────────────────────
 function applyConfig() {
   const c = SITE_CONFIG.colors;
   document.getElementById('dynamic-styles').textContent = `
@@ -757,8 +713,6 @@ function applyConfig() {
   ).join('');
 }
 
-// ── Security helpers ───────────────────────────────────────────
-
 // Escape HTML entities — prevents XSS in all innerHTML interpolations
 function esc(str) {
   if (str == null) return '';
@@ -793,7 +747,6 @@ function rateLimit(key, limitMs) {
   return true;
 }
 
-// ── In-memory fallback DB ───────────────────────────────────────
 const localDB = {
   posts: [
     { id:'1', title:'Hidden Temples of Kyoto: Beyond the Tourist Trail', author:'Sarah K.', author_id:'2', category:'Southeast Asia', emoji:'⛩️', cover_image:'', excerpt:'Most visitors only see Fushimi Inari and Kinkakuji — but Kyoto hides dozens of serene, crowd-free temples just minutes away.', content:'Most visitors to Kyoto follow the same well-worn path between the golden pavilion and the vermilion torii gates. But venture off the main streets and you discover a quieter Kyoto.\n\nStart your morning at Fushimi Inari before the crowds arrive, ideally by 7am. The early light through the torii is extraordinary. Then take the Kintetsu line south to Tofuku-ji, a vast Zen complex whose garden is one of Japan\'s finest.\n\nFor lunch, duck into Nishiki Market — a covered arcade of street food stalls. Try the fresh-grilled mochi, pickled plums, and sesame tofu. In the afternoon, hire a bicycle and pedal north toward Kuramadera, a mountain temple reached via a beautiful forest trail.', status:'published', approved:true, created_at:'2025-01-02' },
@@ -801,9 +754,9 @@ const localDB = {
     { id:'3', title:'Solo in Marrakech: What Nobody Tells You', author:'Amara T.', author_id:'3', category:'Africa', emoji:'🕌', cover_image:'', excerpt:'The medina can feel overwhelming — but lean into the chaos and Marrakech reveals a city of extraordinary warmth.', content:'My first morning in Marrakech was genuinely disorientating. The medina\'s labyrinthine lanes, the constant calls from spice merchants, the motorbikes appearing from nowhere — it is a full sensory assault. By day three, it had become my favourite place on earth.\n\nThe key is to abandon the idea of navigating efficiently. Get lost deliberately. The best moments come from wandering into a courtyard to find a craftsman pressing olive oil.\n\nJemaa el-Fna square transforms completely between day and night. By night it becomes a vast open-air restaurant with dozens of food stalls, storytellers, and musicians. Eat the harira soup and the slow-cooked lamb tagine.', status:'published', approved:true, created_at:'2024-11-03' },
   ],
   users: [
-    { id:'1', first:'Admin', last:'User', email:'admin@wanderlog.com', pass:'admin123', role:'admin', country:'UK', created_at:'2024-01-01' },
-    { id:'2', first:'Sarah', last:'K.', email:'sarah@example.com', pass:'pass123', role:'reader', country:'Australia', created_at:'2024-03-10' },
-    { id:'3', first:'Marco', last:'B.', email:'marco@example.com', pass:'pass123', role:'reader', country:'Italy', created_at:'2024-05-20' }
+    { id:'1', first:'Admin', last:'User', email:'', pass:'', role:'admin', country:'', created_at:'2024-01-01' },
+    { id:'2', first:'Sarah', last:'K.',   email:'', pass:'', role:'reader', country:'', created_at:'2024-03-10' },
+    { id:'3', first:'Marco', last:'B.',   email:'', pass:'', role:'reader', country:'', created_at:'2024-05-20' }
   ],
   comments: [
     { id:'1', post_id:'1', author:'Marco B.', text:'Absolutely wonderful — I had no idea about Tofuku-ji, adding it to my list!', created_at:'2025-01-03', status:'approved' },
@@ -814,7 +767,6 @@ const localDB = {
   nextId: 100
 };
 
-// ── Supabase client (loaded if configured) ─────────────────────
 let SB = null;
 async function initSupabase() {
   const { url, key } = SITE_CONFIG.supabase;
@@ -825,7 +777,6 @@ async function initSupabase() {
     document.getElementById('db-badge').textContent = '● Live — Supabase';
     document.getElementById('db-badge').classList.add('live');
 
-    // ── Restore session on page load ──────────────────────────
     const { data: { session } } = await SB.auth.getSession();
     if (session?.user) {
       const { data: profile } = await SB.from('users')
@@ -836,7 +787,6 @@ async function initSupabase() {
       }
     }
 
-    // ── Seed default ads if table is empty ────────────────────
     const { data: existing } = await SB.from('ads').select('id').limit(1);
     if (existing && existing.length === 0) {
       const seeds = SITE_CONFIG.defaultAds.map(a => ({...a, status:'active'}));
@@ -846,7 +796,6 @@ async function initSupabase() {
   } catch(e) { console.warn('Supabase init failed', e); return false; }
 }
 
-// ── Universal DB layer ─────────────────────────────────────────
 // Reads/writes go through these functions.
 // When SB is null, they use localDB.
 // When SB is set, they call Supabase REST.
@@ -991,11 +940,9 @@ async function dbRegister(first, last, email, pass, country) {
   return {user:{...data.user, first, last, role:'reader'}, error:null};
 }
 
-// ── State ──────────────────────────────────────────────────────
 let currentUser = null;
 let currentFilter = '';
 
-// ── Views ──────────────────────────────────────────────────────
 function showView(name) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
@@ -1018,7 +965,6 @@ function filterCat(cat) {
   document.getElementById('posts-section').scrollIntoView({behavior:'smooth'});
 }
 
-// ── Home / Posts ───────────────────────────────────────────────
 async function loadPosts() {
   document.getElementById('posts-grid').innerHTML = '<div class="loading">Loading stories…</div>';
   const posts = await dbGetPosts(currentFilter ? {category:currentFilter} : {});
@@ -1074,7 +1020,6 @@ async function renderAds() {
   if (mid) document.getElementById('mid-ad-slot').innerHTML = adHtml(mid);
 }
 
-// ── Single Post ────────────────────────────────────────────────
 async function openPost(id) {
   const p = await dbGetPost(id);
   if (!p) return;
@@ -1134,7 +1079,6 @@ async function submitComment(postId) {
   await loadComments(postId);
 }
 
-// ── Auth ───────────────────────────────────────────────────────
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
@@ -1182,7 +1126,6 @@ function updateNav() {
   if (u) n.textContent = 'Hi, '+u.first;
 }
 
-// ── Reader Post Submission ─────────────────────────────────────
 async function doSubmitPost() {
   if (!currentUser) { showMsg('submit-msg','error','Please sign in first.'); return; }
   const title   = document.getElementById('sub-title').value.trim();
@@ -1195,7 +1138,6 @@ async function doSubmitPost() {
   setTimeout(()=>closeModal('modal-submit-post'),2000);
 }
 
-// ── Admin Posts ────────────────────────────────────────────────
 async function loadAdminPosts() {
   const posts = await dbGetAllPosts();
   document.getElementById('admin-stats').innerHTML = `
@@ -1296,7 +1238,6 @@ async function adminDeletePost(id) {
   await dbDeletePost(id); loadAdminPosts(); showAdminMsg('success','Post deleted.');
 }
 
-// ── Admin Users ────────────────────────────────────────────────
 async function renderAdminUsers() {
   const users = await dbGetUsers();
   document.getElementById('admin-users-body').innerHTML = users.map(u=>`
@@ -1315,7 +1256,6 @@ async function adminDeleteUser(id) {
   await dbDeleteUser(id); renderAdminUsers(); showAdminMsg('success','User removed.');
 }
 
-// ── Admin Comments ─────────────────────────────────────────────
 async function renderAdminComments() {
   const all = await dbGetAllComments();
   const allPosts = await dbGetAllPosts();
@@ -1337,7 +1277,6 @@ async function renderAdminComments() {
 async function approveComment(id) { await dbUpdateComment(id,{status:'approved'}); renderAdminComments(); }
 async function delComment(id) { await dbDeleteComment(id); renderAdminComments(); }
 
-// ── Admin Ads ──────────────────────────────────────────────────
 async function renderAdminAds() {
   const ads = await dbGetAds();
   document.getElementById('admin-ads-body').innerHTML = ads.map(a=>`
@@ -1430,14 +1369,12 @@ async function deleteAd(id) {
   await renderAds();
 }
 
-// ── Admin Tab ──────────────────────────────────────────────────
 function adminTab(tabId, navEl) {
   document.querySelectorAll('.section-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
   if (navEl) { document.querySelectorAll('.admin-nav-item').forEach(n=>n.classList.remove('active')); navEl.classList.add('active'); }
 }
 
-// ── Utilities ──────────────────────────────────────────────────
 function openModal(id) {
   document.getElementById(id).classList.add('open');
   if (id === 'modal-login') {
@@ -1455,7 +1392,6 @@ function showAdminMsg(type,text) {
   setTimeout(()=>el.innerHTML='',3000);
 }
 
-// ── Settings DB layer ──────────────────────────────────────────
 const SETTINGS_KEY = 'wanderlog_site_settings';
 
 async function dbLoadSettings() {
@@ -1494,7 +1430,6 @@ async function loadSavedSettings() {
   applyConfig();
 }
 
-// ── Curated theme palettes ─────────────────────────────────────
 const PALETTES = [
   { name:'WanderLog (Default)', desc:'Teal & Amber',
     colors:{ navBg:'#1A2332', pageBg:'#F5F0E8', accent:'#2A7B6F', accentLight:'#E0F0ED', highlight:'#C8883A', highlightLight:'#FDF3E3', text:'#2C3240', muted:'#7A8190', border:'#E2DDD4', cardBg:'#FFFFFF' }},
@@ -1510,7 +1445,6 @@ const PALETTES = [
     colors:{ navBg:'#2C1654', pageBg:'#FFF9F0', accent:'#7B2FBE', accentLight:'#F0E5FF', highlight:'#F4A227', highlightLight:'#FEF7E0', text:'#1E0E3A', muted:'#8A6FAA', border:'#E8DCFA', cardBg:'#FFFFFF' }},
 ];
 
-// ── Render settings tab (all HTML built in JS so template literals work) ──
 function renderSettingsTab() {
   const COLOR_FIELDS = [
     ['navBg','Nav Bar Background'],
@@ -1651,7 +1585,6 @@ function renderSettingsTab() {
     </div>`;
 }
 
-// ── Settings form population ───────────────────────────────────
 function loadSettingsForm() {
   renderSettingsTab();
   const c = SITE_CONFIG;
@@ -1675,7 +1608,6 @@ function loadSettingsForm() {
   document.getElementById('cfg-categories').value = c.categories.join('\n');
 }
 
-// ── Hero background colour swatches ───────────────────────────
 const HERO_BG_COLORS = [
   { label: 'Dark & Dramatic', colors: [
     { hex:'#1A2332', name:'Midnight Navy' },
@@ -1826,7 +1758,6 @@ async function saveSettings() {
   }
 }
 
-// ── Boot ───────────────────────────────────────────────────────
 (async function init() {
   applyConfig();
   // 1. Apply localStorage settings instantly (no network wait)
